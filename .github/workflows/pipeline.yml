@@ -127,6 +127,14 @@ jobs:
               nohup node src/app.js > app.log 2>&1 &
             "
 
+      - name: Check app status on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/key.pem \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+              ps aux | grep node &&
+              cat /home/ubuntu/todo-api/app.log || echo 'No log file found'
+            "
+
       - name: Verify deploy
         run: |
           sleep 10
