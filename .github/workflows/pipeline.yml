@@ -125,6 +125,7 @@ jobs:
               npm install --production &&
               pkill -f 'node src/app.js' || true &&
               nohup node src/app.js > app.log 2>&1 &
+              disown
             "
 
       - name: Check app status on EC2
