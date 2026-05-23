@@ -121,17 +121,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/key.pem \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
-            "cd /home/ubuntu/todo-api && npm install --production && pm2 stop todo-api || true && pm2 start src/app.js --name todo-api"
-
-      - name: Check app status on EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/key.pem \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-              ps aux | grep node &&
-              cat /home/ubuntu/todo-api/app.log || echo 'No log file found'
-            "
+            "bash /home/ubuntu/start-api.sh"
 
       - name: Verify deploy
         run: |
-          sleep 10
+          sleep 5
           curl --fail http://${{ secrets.EC2_HOST }}:3000/health
